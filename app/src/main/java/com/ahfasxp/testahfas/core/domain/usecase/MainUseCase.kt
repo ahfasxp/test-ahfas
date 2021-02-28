@@ -5,6 +5,7 @@ import com.ahfasxp.testahfas.core.data.source.remote.network.ApiResponse
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataMateri
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataTryout
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataUser
+import com.ahfasxp.testahfas.core.domain.model.Tryout
 
 interface MainUseCase {
     fun postRegister(name: String, email: String, password: String): LiveData<ApiResponse<DataUser>>
@@ -27,7 +28,7 @@ interface MainUseCase {
 
     fun destroyMateri(apiToken: String, id: Int): LiveData<ApiResponse<DataMateri>>
 
-    fun getTryouts(): LiveData<ApiResponse<List<DataTryout>>>
+    fun getTryouts(): LiveData<List<Tryout>>
     fun storeTryout(
         apiToken: String,
         name: String,

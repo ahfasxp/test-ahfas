@@ -1,13 +1,16 @@
 package com.ahfasxp.testahfas.core.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.ahfasxp.testahfas.core.data.source.remote.RemoteDataSource
 import com.ahfasxp.testahfas.core.data.source.remote.network.ApiResponse
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataMateri
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataTryout
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataUser
+import com.ahfasxp.testahfas.core.domain.model.Tryout
 import com.ahfasxp.testahfas.core.domain.repository.IMainRepository
 import com.ahfasxp.testahfas.core.utils.AppExecutors
+import com.ahfasxp.testahfas.core.utils.DataMapper
 
 class MainRepository private constructor(
     private val remoteDataSource: RemoteDataSource,
@@ -77,10 +80,14 @@ class MainRepository private constructor(
         return remoteDataSource.destroyMateri(apiToken, id)
     }
 
-    override fun getTryouts(): LiveData<ApiResponse<List<DataTryout>>> {
-        return remoteDataSource.getTryouts()
+    //////////////// DISINI MAS /////////////////////////
+    override fun getTryouts(): LiveData<List<Tryout>> {
+        return Transformations.map(remoteDataSource.getTryouts()) {
+            DataMapper.mapResponsesToDomain(it)
+        }
     }
 
+    /////////////////////////////////////////////////////
     override fun storeTryout(
         apiToken: String,
         name: String,

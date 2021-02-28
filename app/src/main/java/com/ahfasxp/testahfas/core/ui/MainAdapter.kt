@@ -5,16 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ahfasxp.testahfas.R
-import com.ahfasxp.testahfas.core.data.source.remote.response.DataTryout
+import com.ahfasxp.testahfas.core.domain.model.Tryout
 import kotlinx.android.synthetic.main.list_items.view.*
 import java.util.*
 
 class MainAdapter : RecyclerView.Adapter<MainAdapter.ListViewHolder>() {
 
-    private var listData = ArrayList<DataTryout>()
-    var onItemClick: ((DataTryout) -> Unit)? = null
+    private var listData = ArrayList<Tryout>()
+    var onItemClick: ((Tryout) -> Unit)? = null
 
-    fun setData(newListData: List<DataTryout>?) {
+    fun setData(newListData: List<Tryout>?) {
         if (newListData == null) return
         listData.clear()
         listData.addAll(newListData)
@@ -34,7 +34,7 @@ class MainAdapter : RecyclerView.Adapter<MainAdapter.ListViewHolder>() {
     }
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(data: DataTryout) {
+        fun bind(data: Tryout) {
             with(itemView) {
 
                 tv_item_name.text = data.name
