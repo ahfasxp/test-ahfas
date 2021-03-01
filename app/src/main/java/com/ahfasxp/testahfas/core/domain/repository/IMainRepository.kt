@@ -7,11 +7,12 @@ import com.ahfasxp.testahfas.core.data.source.remote.response.DataTryout
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataUser
 import com.ahfasxp.testahfas.core.domain.model.Materi
 import com.ahfasxp.testahfas.core.domain.model.Tryout
+import com.ahfasxp.testahfas.core.domain.model.User
 
 interface IMainRepository {
-    fun postRegister(name: String, email: String, password: String): LiveData<ApiResponse<DataUser>>
-    fun postLogin(email: String, password: String): LiveData<ApiResponse<DataUser>>
-    fun postLogout(apiToken: String): LiveData<ApiResponse<DataUser>>
+    fun postRegister(name: String, email: String, password: String): LiveData<User>
+    fun postLogin(email: String, password: String): LiveData<User>
+    fun postLogout(apiToken: String): LiveData<User>
 
     fun getMateries(): LiveData<List<Materi>>
     fun storeMateri(
@@ -19,16 +20,16 @@ interface IMainRepository {
         name: String,
         content: String,
         createdBy: Int
-    ): LiveData<ApiResponse<DataMateri>>
+    ): LiveData<Materi>
 
     fun updateMateri(
         apiToken: String,
         id: Int,
         name: String,
         content: String
-    ): LiveData<ApiResponse<DataMateri>>
+    ): LiveData<Materi>
 
-    fun destroyMateri(apiToken: String, id: Int): LiveData<ApiResponse<DataMateri>>
+    fun destroyMateri(apiToken: String, id: Int): LiveData<Materi>
 
     fun getTryouts(): LiveData<List<Tryout>>
     fun storeTryout(
@@ -37,7 +38,7 @@ interface IMainRepository {
         description: String,
         time: String,
         createdBy: Int
-    ): LiveData<ApiResponse<DataTryout>>
+    ): LiveData<Tryout>
 
     fun updateTryout(
         apiToken: String,
@@ -45,7 +46,7 @@ interface IMainRepository {
         name: String,
         description: String,
         time: String
-    ): LiveData<ApiResponse<DataTryout>>
+    ): LiveData<Tryout>
 
-    fun destroyTryout(apiToken: String, id: Int): LiveData<ApiResponse<DataTryout>>
+    fun destroyTryout(apiToken: String, id: Int): LiveData<Tryout>
 }

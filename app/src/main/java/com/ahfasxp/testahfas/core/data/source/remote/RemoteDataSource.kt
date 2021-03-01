@@ -28,8 +28,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
         name: String,
         email: String,
         password: String
-    ): LiveData<ApiResponse<DataUser>> {
-        val resultData = MutableLiveData<ApiResponse<DataUser>>()
+    ): LiveData<DataUser> {
+        val resultData = MutableLiveData<DataUser>()
 
         //get data from remote api
         val client = apiService.postRegister(name, email, password)
@@ -38,13 +38,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<RegistrasiUser>,
                 response: Response<RegistrasiUser>
             ) {
-                val data = response.body()?.data
-                resultData.value =
-                    if (data != null) ApiResponse.Success(data) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<RegistrasiUser>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
@@ -55,8 +56,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
     fun postLogin(
         email: String,
         password: String
-    ): LiveData<ApiResponse<DataUser>> {
-        val resultData = MutableLiveData<ApiResponse<DataUser>>()
+    ): LiveData<DataUser> {
+        val resultData = MutableLiveData<DataUser>()
 
         //get data from remote api
         val client = apiService.postLogin(email, password)
@@ -65,13 +66,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<LoginUser>,
                 response: Response<LoginUser>
             ) {
-                val data = response.body()?.data
-                resultData.value =
-                    if (data != null) ApiResponse.Success(data) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<LoginUser>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
@@ -81,8 +83,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
 
     fun postLogout(
         apiToken: String
-    ): LiveData<ApiResponse<DataUser>> {
-        val resultData = MutableLiveData<ApiResponse<DataUser>>()
+    ): LiveData<DataUser> {
+        val resultData = MutableLiveData<DataUser>()
 
         //get data from remote api
         val client = apiService.postLogout(apiToken)
@@ -91,13 +93,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<LogoutUser>,
                 response: Response<LogoutUser>
             ) {
-                val data = response.body()?.data
-                resultData.value =
-                    if (data != null) ApiResponse.Success(data) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<LogoutUser>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
@@ -137,8 +140,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
         name: String,
         content: String,
         createdBy: Int
-    ): LiveData<ApiResponse<DataMateri>> {
-        val resultData = MutableLiveData<ApiResponse<DataMateri>>()
+    ): LiveData<DataMateri> {
+        val resultData = MutableLiveData<DataMateri>()
 
         //get data from remote api
         val client = apiService.storeMateri(apiToken, name, content, createdBy)
@@ -147,13 +150,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<StoreMateri>,
                 response: Response<StoreMateri>
             ) {
-                val data = response.body()?.data
-                resultData.value =
-                    if (data != null) ApiResponse.Success(data) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<StoreMateri>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
@@ -166,8 +170,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
         id: Int,
         name: String,
         content: String
-    ): LiveData<ApiResponse<DataMateri>> {
-        val resultData = MutableLiveData<ApiResponse<DataMateri>>()
+    ): LiveData<DataMateri> {
+        val resultData = MutableLiveData<DataMateri>()
 
         //get data from remote api
         val client = apiService.updateMateri(apiToken, id, name, content)
@@ -176,13 +180,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<UpdateMateri>,
                 response: Response<UpdateMateri>
             ) {
-                val data = response.body()?.data
-                resultData.value =
-                    if (data != null) ApiResponse.Success(data) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<UpdateMateri>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
@@ -193,8 +198,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
     fun destroyMateri(
         apiToken: String,
         id: Int
-    ): LiveData<ApiResponse<DataMateri>> {
-        val resultData = MutableLiveData<ApiResponse<DataMateri>>()
+    ): LiveData<DataMateri> {
+        val resultData = MutableLiveData<DataMateri>()
 
         //get data from remote api
         val client = apiService.destroyMateri(apiToken, id)
@@ -203,13 +208,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<DestroyMateri>,
                 response: Response<DestroyMateri>
             ) {
-                val data = response.body()?.data
-                resultData.value =
-                    if (data != null) ApiResponse.Success(data) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<DestroyMateri>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
@@ -250,8 +256,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
         description: String,
         time: String,
         createdBy: Int
-    ): LiveData<ApiResponse<DataTryout>> {
-        val resultData = MutableLiveData<ApiResponse<DataTryout>>()
+    ): LiveData<DataTryout> {
+        val resultData = MutableLiveData<DataTryout>()
 
         //get data from remote api
         val client = apiService.storeTryout(apiToken, name, description, time, createdBy)
@@ -260,13 +266,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<StoreTryout>,
                 response: Response<StoreTryout>
             ) {
-                val data = response.body()?.data
-                resultData.value =
-                    if (data != null) ApiResponse.Success(data) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<StoreTryout>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
@@ -280,8 +287,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
         name: String,
         description: String,
         time: String
-    ): LiveData<ApiResponse<DataTryout>> {
-        val resultData = MutableLiveData<ApiResponse<DataTryout>>()
+    ): LiveData<DataTryout> {
+        val resultData = MutableLiveData<DataTryout>()
 
         //get data from remote api
         val client = apiService.updateTryout(apiToken, id, name, description, time)
@@ -290,13 +297,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<UpdateTryout>,
                 response: Response<UpdateTryout>
             ) {
-                val data = response.body()?.data
-                resultData.value =
-                    if (data != null) ApiResponse.Success(data) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<UpdateTryout>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
@@ -307,8 +315,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
     fun destroyTryout(
         apiToken: String,
         id: Int
-    ): LiveData<ApiResponse<DataTryout>> {
-        val resultData = MutableLiveData<ApiResponse<DataTryout>>()
+    ): LiveData<DataTryout> {
+        val resultData = MutableLiveData<DataTryout>()
 
         //get data from remote api
         val client = apiService.destroyTryout(apiToken, id)
@@ -317,13 +325,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<DestroyTryout>,
                 response: Response<DestroyTryout>
             ) {
-                val data = response.body()?.data
-                resultData.value =
-                    if (data != null) ApiResponse.Success(data) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<DestroyTryout>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
