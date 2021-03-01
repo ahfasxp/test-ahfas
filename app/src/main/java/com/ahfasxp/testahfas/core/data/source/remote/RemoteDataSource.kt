@@ -1,5 +1,6 @@
 package com.ahfasxp.testahfas.core.data.source.remote
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -217,8 +218,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
 
 
     /// TRYOUT ///
-    fun getTryouts(): LiveData<ApiResponse<List<DataTryout>>> {
-        val resultData = MutableLiveData<ApiResponse<List<DataTryout>>>()
+    fun getTryouts(): LiveData<List<DataTryout>> {
+        val resultData = MutableLiveData<List<DataTryout>>()
 
         //get data from remote api
         val client = apiService.gettryouts()
@@ -227,13 +228,15 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<TryoutResponse>,
                 response: Response<TryoutResponse>
             ) {
-                val dataArray = response.body()?.data
-                resultData.value =
-                    if (dataArray != null) ApiResponse.Success(dataArray) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    val dataArray = response.body()?.data as List<DataTryout>
+                    resultData.value = dataArray
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<TryoutResponse>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
