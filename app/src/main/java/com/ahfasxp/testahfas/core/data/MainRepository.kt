@@ -7,6 +7,7 @@ import com.ahfasxp.testahfas.core.data.source.remote.network.ApiResponse
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataMateri
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataTryout
 import com.ahfasxp.testahfas.core.data.source.remote.response.DataUser
+import com.ahfasxp.testahfas.core.domain.model.Materi
 import com.ahfasxp.testahfas.core.domain.model.Tryout
 import com.ahfasxp.testahfas.core.domain.repository.IMainRepository
 import com.ahfasxp.testahfas.core.utils.AppExecutors
@@ -51,8 +52,10 @@ class MainRepository private constructor(
         return remoteDataSource.postLogout(apiToken)
     }
 
-    override fun getMateries(): LiveData<ApiResponse<List<DataMateri>>> {
-        return remoteDataSource.getMateries()
+    override fun getMateries(): LiveData<List<Materi>> {
+        return Transformations.map(remoteDataSource.getMateries()) {
+            DataMapper.mapResponsesToDomainMateri(it)
+        }
     }
 
     override fun storeMateri(
@@ -80,14 +83,12 @@ class MainRepository private constructor(
         return remoteDataSource.destroyMateri(apiToken, id)
     }
 
-    //////////////// DISINI MAS /////////////////////////
     override fun getTryouts(): LiveData<List<Tryout>> {
         return Transformations.map(remoteDataSource.getTryouts()) {
-            DataMapper.mapResponsesToDomain(it)
+            DataMapper.mapResponsesToDomainTryout(it)
         }
     }
 
-    /////////////////////////////////////////////////////
     override fun storeTryout(
         apiToken: String,
         name: String,

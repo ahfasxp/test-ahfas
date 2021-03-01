@@ -107,8 +107,8 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
 
 
     /// MATERI ///
-    fun getMateries(): LiveData<ApiResponse<List<DataMateri>>> {
-        val resultData = MutableLiveData<ApiResponse<List<DataMateri>>>()
+    fun getMateries(): LiveData<List<DataMateri>> {
+        val resultData = MutableLiveData<List<DataMateri>>()
 
         //get data from remote api
         val client = apiService.getMateries()
@@ -117,13 +117,14 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<MateriResponse>,
                 response: Response<MateriResponse>
             ) {
-                val dataArray = response.body()?.data
-                resultData.value =
-                    if (dataArray != null) ApiResponse.Success(dataArray) else ApiResponse.Empty
+                if (response.isSuccessful) {
+                    resultData.value = response.body()?.data
+                } else {
+                    Log.e(TAG, "onFailure: ${response.message()}")
+                }
             }
 
             override fun onFailure(call: Call<MateriResponse>, t: Throwable) {
-                resultData.value = ApiResponse.Error(t.message.toString())
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })
@@ -229,8 +230,7 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 response: Response<TryoutResponse>
             ) {
                 if (response.isSuccessful) {
-                    val dataArray = response.body()?.data as List<DataTryout>
-                    resultData.value = dataArray
+                    resultData.value = response.body()?.data
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
                 }

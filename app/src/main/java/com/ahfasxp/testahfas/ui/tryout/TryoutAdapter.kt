@@ -1,4 +1,4 @@
-package com.ahfasxp.testahfas.core.ui
+package com.ahfasxp.testahfas.ui.tryout
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import com.ahfasxp.testahfas.core.domain.model.Tryout
 import kotlinx.android.synthetic.main.list_items.view.*
 import java.util.*
 
-class MainAdapter : RecyclerView.Adapter<MainAdapter.ListViewHolder>() {
+class TryoutAdapter : RecyclerView.Adapter<TryoutAdapter.ListViewHolder>() {
 
     private var listData = ArrayList<Tryout>()
     var onItemClick: ((Tryout) -> Unit)? = null

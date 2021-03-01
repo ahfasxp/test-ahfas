@@ -4,13 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ahfasxp.testahfas.R
-import com.ahfasxp.testahfas.core.data.Resource
-import com.ahfasxp.testahfas.core.ui.MainAdapter
 import com.ahfasxp.testahfas.core.ui.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_tryout.*
 
@@ -29,23 +26,23 @@ class TryoutFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
 
-            val mainAdapter = MainAdapter()
+            val tryoutAdapter = TryoutAdapter()
             val factory = ViewModelFactory.getInstance(requireActivity())
             tryoutViewModel = ViewModelProvider(this, factory)[TryoutViewModel::class.java]
 
             tryoutViewModel.getTryouts.observe(viewLifecycleOwner, { tryouts ->
                 if (tryouts != null) {
-                    mainAdapter.setData(tryouts)
+                    tryoutAdapter.setData(tryouts)
                 }
             })
 
             with(rv_tryouts) {
                 layoutManager = LinearLayoutManager(context)
                 setHasFixedSize(true)
-                adapter = mainAdapter
+                adapter = tryoutAdapter
             }
 
-            mainAdapter.onItemClick = { selectedData ->
+            tryoutAdapter.onItemClick = { selectedData ->
 
             }
         }

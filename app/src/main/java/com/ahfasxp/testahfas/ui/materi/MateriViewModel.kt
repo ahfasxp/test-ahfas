@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.ahfasxp.testahfas.core.domain.usecase.MainUseCase
 
 class MateriViewModel(private val mainUseCase: MainUseCase) : ViewModel() {
-    val materies = mainUseCase.getMateries()
+    val getMateries = mainUseCase.getMateries()
 
     fun storeMateri(
         apiToken: String,
