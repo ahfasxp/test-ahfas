@@ -4,7 +4,6 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.ahfasxp.testahfas.core.data.source.remote.network.ApiResponse
 import com.ahfasxp.testahfas.core.data.source.remote.network.ApiService
 import com.ahfasxp.testahfas.core.data.source.remote.response.*
 import retrofit2.Call
@@ -66,14 +65,18 @@ class RemoteDataSource private constructor(private val apiService: ApiService) {
                 call: Call<LoginUser>,
                 response: Response<LoginUser>
             ) {
-                if (response.isSuccessful) {
-                    resultData.value = response.body()?.data
+                val loginResponse = response.body()
+                if (response.isSuccessful()) {
+                    // user object available
+                    resultData.value = loginResponse?.data
                 } else {
-                    Log.e(TAG, "onFailure: ${response.message()}")
+                    // error response, no access to resource?
+                    Log.e(TAG, "onFailure: ${loginResponse?.message}")
                 }
             }
 
             override fun onFailure(call: Call<LoginUser>, t: Throwable) {
+                // something went completely south (like no internet connection)
                 Log.e("RemoteDataSource", t.message.toString())
             }
         })

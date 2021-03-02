@@ -10,10 +10,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.ahfasxp.testahfas.R
 import com.ahfasxp.testahfas.core.ui.ViewModelFactory
+import com.ahfasxp.testahfas.core.utils.SessionManager
 import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : Fragment() {
     private lateinit var authViewModel: AuthViewModel
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,23 +30,39 @@ class LoginFragment : Fragment() {
         if (activity != null) {
             val factory = ViewModelFactory.getInstance(requireActivity())
             authViewModel = ViewModelProvider(this, factory)[AuthViewModel::class.java]
+            sessionManager = SessionManager(activity!!)
 
-            val edtEmail = "admin@mail.com"
-            val edtPassword = "admin123"
-            btn_login.setOnClickListener {
-                authViewModel.postLogin(edtEmail, edtPassword)
-                    .observe(viewLifecycleOwner, { user ->
-                        if (user != null) {
-                            view.findNavController()
-                                .navigate(R.id.action_loginFragment_to_homeFragment)
-                        } else {
-                            Toast.makeText(context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
-                        }
-                    })
+            btn_login.setOnClickListener { login() }
+            btn_register.setOnClickListener { register() }
+        }
+    }
+
+    private fun login() {
+        authViewModel.postLogin(
+            edt_email.text.toString(),
+            edt_password.text.toString()
+        ).observe(viewLifecycleOwner, { user ->
+            if (user != null) {
+                sessionManager.saveAuthToken(user.apiToken)
+                view?.findNavController()
+                    ?.navigate(R.id.action_loginFragment_to_homeFragment)
+            } else {
+                view?.findNavController()
+                    ?.navigate(R.id.action_loginFragment_to_registerFragment)
             }
-            btn_register.setOnClickListener {
-                view.findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
-            }
+        })
+    }
+
+    private fun register() {
+        Toast.makeText(context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+        view?.findNavController()?.navigate(R.id.action_loginFragment_to_registerFragment)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (sessionManager.fetchAuthToken() != null) {
+            view?.findNavController()
+                ?.navigate(R.id.action_loginFragment_to_homeFragment)
         }
     }
 }
